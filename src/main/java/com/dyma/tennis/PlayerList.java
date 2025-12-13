@@ -3,6 +3,7 @@ package com.dyma.tennis;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 public class PlayerList {
 
@@ -36,10 +37,11 @@ public class PlayerList {
         );
     }
 
-    public static final List<Player> ALL = Arrays.asList( // Arrays.asList crée une liste fixe avec les éléments fournis, elle prend en paramètre une série d'objets et retourne une liste contenant ces objets
+    public static List<Player> ALL = new ArrayList<>(Arrays.asList( // Utiliser une ArrayList mutable pour permettre les mises à jour
+            rogerFederer(),
             rafaelNadal(),
-            novakDjokovic(),
-            rogerFederer()
-    );
+            novakDjokovic()
+
+    ));
 
 }

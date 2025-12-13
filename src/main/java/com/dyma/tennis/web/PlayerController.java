@@ -1,23 +1,26 @@
 package com.dyma.tennis.web;
 
+import com.dyma.tennis.Error;
 import com.dyma.tennis.Player;
-import com.dyma.tennis.PlayerList;
+import com.dyma.tennis.PlayerToSave;
+import com.dyma.tennis.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Tag(name = "Tennis Player API")
 @RestController
 @RequestMapping("/players") //@RequestMapping permet de définir le chemin de base pour toutes les requêtes de ce contrôleur
 public class PlayerController {
+
+    @Autowired
+    public PlayerService playerService;
 
     @Operation(summary = "Finds all players", description = "Returns a list of all players")
     @ApiResponses( value = { //@ApiResponses permet de définir plusieurs réponses possibles pour une opération
@@ -34,7 +37,7 @@ public class PlayerController {
     @GetMapping
     public List<Player> list() {
         // Implementation goes here
-        return PlayerList.ALL;
+        return playerService.getAllPlayers();
     }
 
     @Operation(summary="Finds a player by last name", description = "Returns a single player matching the provided last name")
@@ -46,11 +49,18 @@ public class PlayerController {
                         schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Player.class) // cette syntaxe permet de spécifier que le schéma de la réponse est basé sur la classe Player
                     )
              }),
-        @ApiResponse(responseCode = "404", description = "Player not found")
+        @ApiResponse(responseCode = "404", description = "Player not found",
+             content = {
+                    @io.swagger.v3.oas.annotations.media.Content(
+                        mediaType = "application/json",
+                        schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Error.class)
+                    )
+             }
+        )
     })
     @GetMapping("{lastName}")
     public Player getByLastName(@PathVariable("lastName") String lastName) { //@PathVariable permet de lier la variable lastName de l'URL à la variable lastName de la méthode
-        return PlayerList.ALL.stream().filter(player -> player.lastName().equals(lastName)).findFirst().orElseThrow(() -> new NoSuchElementException("Player not found"));
+        return playerService.getPlayerByLastName(lastName);
     }
 
     @Operation (summary="Creates a new player", description = "Creates a new player with the provided details")
@@ -59,14 +69,14 @@ public class PlayerController {
              content = {
                     @io.swagger.v3.oas.annotations.media.Content(
                         mediaType = "application/json",
-                        schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Player.class)
+                        schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = PlayerToSave.class)
                     )
              })
     })
     @PostMapping
-    public Player createPlayer(@RequestBody @Valid Player player) { //@RequestBody permet de lier le corps de la requête HTTP à l'objet player
+    public Player createPlayer(@RequestBody @Valid PlayerToSave playerToSave) { //@RequestBody permet de lier le corps de la requête HTTP à l'objet player
         // Implementation goes here
-        return player;
+        return playerService.create(playerToSave);
 
     }
 
@@ -83,9 +93,9 @@ public class PlayerController {
     })
 
     @PutMapping
-    public Player updatePlayer(@RequestBody @Valid Player player) {
+    public Player updatePlayer(@RequestBody @Valid PlayerToSave playerToSave) {
         // Implementation goes here
-        return player;
+        return playerService.update(playerToSave);
 
     }
 
