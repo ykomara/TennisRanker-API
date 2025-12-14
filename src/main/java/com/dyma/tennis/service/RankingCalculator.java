@@ -1,6 +1,7 @@
 package com.dyma.tennis.service;
 
 import com.dyma.tennis.Player;
+import com.dyma.tennis.PlayerList;
 import com.dyma.tennis.PlayerToSave;
 import com.dyma.tennis.Rank;
 
@@ -11,22 +12,30 @@ import java.util.List;
 public class RankingCalculator {
 
     private final List<Player> currentPlayersRanking;
-    private final PlayerToSave playerToRegister;
+    private final PlayerToSave playerToSave;
 
     public RankingCalculator(List<Player> currentPlayersRanking, PlayerToSave playerToSave) {
         this.currentPlayersRanking = currentPlayersRanking;
-        this.playerToRegister = playerToSave;
+        this.playerToSave = playerToSave;
+    }
+
+    public RankingCalculator(List<Player> currentPlayersRanking) {
+        this.currentPlayersRanking = currentPlayersRanking;
+        this.playerToSave = null;
     }
 
     public List<Player> getNewPlayersRanking() {
         List<Player> newRankingList = new ArrayList<>(currentPlayersRanking);
-        newRankingList.add(new Player(
-                playerToRegister.id(),
-                playerToRegister.firstName(),
-                playerToRegister.lastName(),
-                playerToRegister.birthDate(),
-                new Rank(99999999, playerToRegister.points())
-        ));
+
+        if (playerToSave != null) {
+            newRankingList.add(new Player(
+                    playerToSave.id(),
+                    playerToSave.firstName(),
+                    playerToSave.lastName(),
+                    playerToSave.birthDate(),
+                    new Rank(99999999, playerToSave.points())
+            ));
+        }
 
         newRankingList.sort((player1, player2) -> Integer.compare(player2.rank().points(), player1.rank().points()));
 
@@ -48,6 +57,8 @@ public class RankingCalculator {
             );
             updatedPlayers.add(updatedPlayer);
         }
+
+        PlayerList.ALL = updatedPlayers;
 
         return updatedPlayers;
     }

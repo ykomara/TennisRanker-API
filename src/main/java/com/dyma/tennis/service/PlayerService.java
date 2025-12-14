@@ -37,9 +37,12 @@ public class PlayerService {
 
     public void delete(String lastName){
         Player playerToDelete = getPlayerByLastName(lastName);
-        PlayerList.ALL = PlayerList.ALL.stream()
+        PlayerList.ALL = PlayerList.ALL.stream() // cette affectation met à jour la liste des joueurs en excluant le joueur supprimé
                 .filter(player -> !player.lastName().equals(playerToDelete.lastName()))
                 .collect(Collectors.toList());
+
+        RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL);
+        rankingCalculator.getNewPlayersRanking(); // recalculer le classement après la suppression
 
 
 

@@ -105,7 +105,8 @@ public class PlayerController {
         @ApiResponse(responseCode = "404", description = "Player not found") // 404 veut dire que la ressource demandée n'a pas été trouvée
     })
     @DeleteMapping("{lastName}")
-    public void deletePlayer(@PathVariable("lastName") String lastName) {
+    public void deletePlayerByLastName(@PathVariable("lastName") String lastName) {
         // Implementation goes here
+        playerService.delete(lastName);
     }
 }
