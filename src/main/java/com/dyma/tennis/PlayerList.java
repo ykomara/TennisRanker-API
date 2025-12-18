@@ -9,7 +9,7 @@ public class PlayerList {
 
     public static Player rafaelNadal() {
         return new Player(
-                "1",
+
                 "Rafael",
                 "Nadal",
                 LocalDate.of(1986, 6, 3),
@@ -19,7 +19,7 @@ public class PlayerList {
 
     public static Player novakDjokovic() {
         return new Player(
-                "2",
+
                 "Novak",
                 "Djokovic",
                 LocalDate.of(1987, 5, 22),
@@ -29,7 +29,7 @@ public class PlayerList {
 
     public static Player rogerFederer() {
         return new Player(
-                "3",
+
                 "Roger",
                 "Federer",
                 LocalDate.of(1981, 8, 8),

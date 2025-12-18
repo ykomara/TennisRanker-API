@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 public record PlayerToSave(
                      //ajout des contraintes de validation et des messages d'erreur personnalisés
-                     @PositiveOrZero(message = "identifiant obligatoire") String id,
                      @NotBlank(message= " le prenom est obligatoire " ) String firstName,
                      @NotBlank(message= "le nom est obligatoire") String lastName,
                      @PastOrPresent LocalDate birthDate,

@@ -71,7 +71,16 @@ public class PlayerController {
                         mediaType = "application/json",
                         schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = PlayerToSave.class)
                     )
-             })
+             }),
+            @ApiResponse(responseCode = "404", description = "Player with the same last name already exists",
+                    content = {
+                            @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Error.class)
+                            )
+                    }
+            )
+
     })
     @PostMapping
     public Player createPlayer(@RequestBody @Valid PlayerToSave playerToSave) { //@RequestBody permet de lier le corps de la requête HTTP à l'objet player
