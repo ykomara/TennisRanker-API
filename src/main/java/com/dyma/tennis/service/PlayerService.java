@@ -1,6 +1,5 @@
 package com.dyma.tennis.service;
 import com.dyma.tennis.Player;
-import com.dyma.tennis.PlayerList;
 import com.dyma.tennis.PlayerToSave;
 import com.dyma.tennis.Rank;
 import com.dyma.tennis.data.PlayerEntity;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 
@@ -56,12 +55,14 @@ public class PlayerService {
     }
 
     public Player create(PlayerToSave playerToSave){
-        Optional<PlayerEntity> playerToCreate = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
+        // Use first+last name to detect exact duplicate persons, not only last name
+        Optional<PlayerEntity> playerToCreate = playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCase(playerToSave.firstName(), playerToSave.lastName());
         if(playerToCreate.isPresent()){
             throw new PlayerAlreadyExistsException(playerToSave.lastName());
         }
 
         // les setters permettent d'initialiser les propriétés de l'entité PlayerEntity avant de la sauvegarder dans la base de données
+        // PlayerEntity(lastName, firstName, birthDate, points, rank)
         PlayerEntity playerEntity = new PlayerEntity(playerToSave.lastName(), playerToSave.firstName(), playerToSave.birthDate(), playerToSave.points(), 999999999);
 
         playerRepository.save(playerEntity);
@@ -74,7 +75,8 @@ public class PlayerService {
     }
 
     public Player update(PlayerToSave playerToSave){
-        Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
+        // use first+last to find the exact player to update
+        Optional<PlayerEntity> player = playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCase(playerToSave.firstName(), playerToSave.lastName());
         if(player.isEmpty()){
             throw new PlayerNotFoundException(playerToSave.lastName());
         }
