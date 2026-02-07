@@ -1,5 +1,6 @@
 package com.dyma.tennis.web;
 
+import com.dyma.tennis.Error;
 import com.dyma.tennis.service.PlayerAlreadyExistsException;
 import com.dyma.tennis.service.PlayerNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = PlayerController.class) // permet en général de tester un controller sans démarrer le serveur
+@ActiveProfiles("test")
 public class PlayerControllerTest {
 
     @Autowired
@@ -64,7 +66,7 @@ public class PlayerControllerTest {
         //when & then
         mockMvc.perform(get("/players/Unknown"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", CoreMatchers.is("Player with last name 'Player Unknown does not exist' not found.")));
+                .andExpect(jsonPath("$.errorDetails", CoreMatchers.is("Player with last name 'Player Unknown does not exist' not found.")));
 
     }
 }

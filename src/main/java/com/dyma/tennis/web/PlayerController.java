@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Tennis Player API")
 @RestController
-@RequestMapping("/players") //@RequestMapping permet de définir le chemin de base pour toutes les requêtes de ce contrôleur
+    @RequestMapping("/players") //@RequestMapping permet de définir le chemin de base pour toutes les requêtes de ce contrôleur
 public class PlayerController {
 
     @Autowired
